@@ -1,0 +1,300 @@
+.F..F..F...F...F....F..F...F..FFF...F...                                 [100%]
+=================================== FAILURES ===================================
+_ test_ecp_registration_classes[ECP-02-positive-dues-student_args1-course_args1-DUES_BLOCK] _
+
+test_id = 'ECP-02-positive-dues', student_args = {'outstanding_dues': 1}
+course_args = {}, expected = 'DUES_BLOCK'
+
+    @pytest.mark.parametrize(
+        "test_id,student_args,course_args,expected",
+        [
+            ("ECP-01-zero-dues", {"outstanding_dues": 0}, {}, "REGISTERED"),
+            ("ECP-02-positive-dues", {"outstanding_dues": 1}, {}, "DUES_BLOCK"),
+            ("ECP-03-no-prerequisites", {}, {"prerequisites": set()}, "REGISTERED"),
+            ("ECP-04-all-prerequisites", {"completed_courses": {"CS101", "MATH101"}}, {}, "REGISTERED"),
+            ("ECP-05-some-prerequisites-missing", {"completed_courses": {"CS101"}}, {}, "PREREQUISITES_MISSING"),
+            ("ECP-06-no-prerequisites-completed", {"completed_courses": set()}, {}, "PREREQUISITES_MISSING"),
+            ("ECP-07-seat-available", {}, {"capacity": 30, "enrolled": 29}, "REGISTERED"),
+            ("ECP-08-course-full", {}, {"capacity": 30, "enrolled": 30}, "WAITLISTED"),
+            ("ECP-09-duplicate-registration", {"registered_courses": {"CS201"}}, {}, "ALREADY_REGISTERED"),
+            ("ECP-10-credit-over-limit", {"current_credits": 16}, {"credit_hours": 3}, "CREDIT_LIMIT"),
+        ],
+    )
+    def test_ecp_registration_classes(test_id, student_args, course_args, expected):
+        student = make_student(**student_args)
+        course = make_course(**course_args)
+>       assert registration_decision(student, course) == expected, test_id
+E       AssertionError: ECP-02-positive-dues
+E       assert 'REGISTERED' == 'DUES_BLOCK'
+E         
+E         - DUES_BLOCK
+E         + REGISTERED
+
+tests/test_blackbox.py:59: AssertionError
+_ test_ecp_registration_classes[ECP-05-some-prerequisites-missing-student_args4-course_args4-PREREQUISITES_MISSING] _
+
+test_id = 'ECP-05-some-prerequisites-missing'
+student_args = {'completed_courses': {'CS101'}}, course_args = {}
+expected = 'PREREQUISITES_MISSING'
+
+    @pytest.mark.parametrize(
+        "test_id,student_args,course_args,expected",
+        [
+            ("ECP-01-zero-dues", {"outstanding_dues": 0}, {}, "REGISTERED"),
+            ("ECP-02-positive-dues", {"outstanding_dues": 1}, {}, "DUES_BLOCK"),
+            ("ECP-03-no-prerequisites", {}, {"prerequisites": set()}, "REGISTERED"),
+            ("ECP-04-all-prerequisites", {"completed_courses": {"CS101", "MATH101"}}, {}, "REGISTERED"),
+            ("ECP-05-some-prerequisites-missing", {"completed_courses": {"CS101"}}, {}, "PREREQUISITES_MISSING"),
+            ("ECP-06-no-prerequisites-completed", {"completed_courses": set()}, {}, "PREREQUISITES_MISSING"),
+            ("ECP-07-seat-available", {}, {"capacity": 30, "enrolled": 29}, "REGISTERED"),
+            ("ECP-08-course-full", {}, {"capacity": 30, "enrolled": 30}, "WAITLISTED"),
+            ("ECP-09-duplicate-registration", {"registered_courses": {"CS201"}}, {}, "ALREADY_REGISTERED"),
+            ("ECP-10-credit-over-limit", {"current_credits": 16}, {"credit_hours": 3}, "CREDIT_LIMIT"),
+        ],
+    )
+    def test_ecp_registration_classes(test_id, student_args, course_args, expected):
+        student = make_student(**student_args)
+        course = make_course(**course_args)
+>       assert registration_decision(student, course) == expected, test_id
+E       AssertionError: ECP-05-some-prerequisites-missing
+E       assert 'REGISTERED' == 'PREREQUISITES_MISSING'
+E         
+E         - PREREQUISITES_MISSING
+E         + REGISTERED
+
+tests/test_blackbox.py:59: AssertionError
+_ test_ecp_registration_classes[ECP-08-course-full-student_args7-course_args7-WAITLISTED] _
+
+test_id = 'ECP-08-course-full', student_args = {}
+course_args = {'capacity': 30, 'enrolled': 30}, expected = 'WAITLISTED'
+
+    @pytest.mark.parametrize(
+        "test_id,student_args,course_args,expected",
+        [
+            ("ECP-01-zero-dues", {"outstanding_dues": 0}, {}, "REGISTERED"),
+            ("ECP-02-positive-dues", {"outstanding_dues": 1}, {}, "DUES_BLOCK"),
+            ("ECP-03-no-prerequisites", {}, {"prerequisites": set()}, "REGISTERED"),
+            ("ECP-04-all-prerequisites", {"completed_courses": {"CS101", "MATH101"}}, {}, "REGISTERED"),
+            ("ECP-05-some-prerequisites-missing", {"completed_courses": {"CS101"}}, {}, "PREREQUISITES_MISSING"),
+            ("ECP-06-no-prerequisites-completed", {"completed_courses": set()}, {}, "PREREQUISITES_MISSING"),
+            ("ECP-07-seat-available", {}, {"capacity": 30, "enrolled": 29}, "REGISTERED"),
+            ("ECP-08-course-full", {}, {"capacity": 30, "enrolled": 30}, "WAITLISTED"),
+            ("ECP-09-duplicate-registration", {"registered_courses": {"CS201"}}, {}, "ALREADY_REGISTERED"),
+            ("ECP-10-credit-over-limit", {"current_credits": 16}, {"credit_hours": 3}, "CREDIT_LIMIT"),
+        ],
+    )
+    def test_ecp_registration_classes(test_id, student_args, course_args, expected):
+        student = make_student(**student_args)
+        course = make_course(**course_args)
+>       assert registration_decision(student, course) == expected, test_id
+E       AssertionError: ECP-08-course-full
+E       assert 'REGISTERED' == 'WAITLISTED'
+E         
+E         - WAITLISTED
+E         + REGISTERED
+
+tests/test_blackbox.py:59: AssertionError
+_ test_ecp_credit_class_representatives[ECP-12-valid-max-course-credit-14-4-True] _
+
+test_id = 'ECP-12-valid-max-course-credit', current = 14, new = 4
+expected = True
+
+    @pytest.mark.parametrize(
+        "test_id,current,new,expected",
+        [
+            ("ECP-11-valid-min-course-credit", 0, 1, True),
+            ("ECP-12-valid-max-course-credit", 14, 4, True),
+            ("ECP-13-one-over-credit-limit", 16, 3, False),
+        ],
+    )
+    def test_ecp_credit_class_representatives(test_id, current, new, expected):
+>       assert check_credit_limit(current, new) is expected, test_id
+E       AssertionError: ECP-12-valid-max-course-credit
+E       assert False is True
+E        +  where False = check_credit_limit(14, 4)
+
+tests/test_blackbox.py:71: AssertionError
+________ test_bva_credit_boundaries[BVA-04-total-exactly-18-15-3-True] _________
+
+test_id = 'BVA-04-total-exactly-18', current = 15, new = 3, expected = True
+
+    @pytest.mark.parametrize(
+        "test_id,current,new,expected",
+        [
+            ("BVA-02-current-credit-maximum", 18, 1, False),
+            ("BVA-03-total-just-below-limit", 16, 1, True),
+            ("BVA-04-total-exactly-18", 15, 3, True),
+            ("BVA-06-course-credit-minimum", 4, 1, True),
+        ],
+    )
+    def test_bva_credit_boundaries(test_id, current, new, expected):
+>       assert check_credit_limit(current, new) is expected, test_id
+E       AssertionError: BVA-04-total-exactly-18
+E       assert False is True
+E        +  where False = check_credit_limit(15, 3)
+
+tests/test_blackbox.py:85: AssertionError
+________ test_bva_capacity_boundary[BVA-11-exact-capacity-2-WAITLISTED] ________
+
+test_id = 'BVA-11-exact-capacity', enrolled = 2, expected = 'WAITLISTED'
+
+    @pytest.mark.parametrize(
+        "test_id,enrolled,expected",
+        [
+            ("BVA-10-one-seat-below-capacity", 1, "REGISTERED"),
+            ("BVA-11-exact-capacity", 2, "WAITLISTED"),
+        ],
+    )
+    def test_bva_capacity_boundary(test_id, enrolled, expected):
+>       assert registration_decision(make_student(), make_course(capacity=2, enrolled=enrolled)) == expected, test_id
+E       AssertionError: BVA-11-exact-capacity
+E       assert 'REGISTERED' == 'WAITLISTED'
+E         
+E         - WAITLISTED
+E         + REGISTERED
+
+tests/test_blackbox.py:108: AssertionError
+_ test_decision_table_priority[DT-01-dues-over-duplicate-student_args0-course_args0-DUES_BLOCK] _
+
+test_id = 'DT-01-dues-over-duplicate'
+student_args = {'outstanding_dues': 1, 'registered_courses': {'CS201'}}
+course_args = {'prerequisites': {'MISSING'}, 'capacity': 1, 'enrolled': 1}
+expected = 'DUES_BLOCK'
+
+    @pytest.mark.parametrize(
+        "test_id,student_args,course_args,expected",
+        [
+            ("DT-01-dues-over-duplicate", {"outstanding_dues": 1, "registered_courses": {"CS201"}}, {"prerequisites": {"MISSING"}, "capacity": 1, "enrolled": 1}, "DUES_BLOCK"),
+            ("DT-02-duplicate-over-prerequisites", {"registered_courses": {"CS201"}}, {"prerequisites": {"MISSING"}, "capacity": 1, "enrolled": 1}, "ALREADY_REGISTERED"),
+            ("DT-03-prerequisite-over-credit", {"completed_courses": set(), "current_credits": 18}, {"prerequisites": {"MISSING"}, "capacity": 1, "enrolled": 1}, "PREREQUISITES_MISSING"),
+            ("DT-04-credit-over-availability", {"current_credits": 18}, {"prerequisites": set(), "capacity": 1, "enrolled": 1}, "CREDIT_LIMIT"),
+            ("DT-05-full-course", {}, {"prerequisites": set(), "capacity": 1, "enrolled": 1}, "WAITLISTED"),
+            ("DT-06-seat-available", {}, {"prerequisites": set(), "capacity": 1, "enrolled": 0}, "REGISTERED"),
+        ],
+    )
+    def test_decision_table_priority(test_id, student_args, course_args, expected):
+        student = make_student(**student_args)
+        course = make_course(**course_args)
+        before = (student.current_credits, set(student.registered_courses), course.enrolled, list(course.waitlist))
+>       assert registration_decision(student, course) == expected, test_id
+E       AssertionError: DT-01-dues-over-duplicate
+E       assert 'ALREADY_REGISTERED' == 'DUES_BLOCK'
+E         
+E         - DUES_BLOCK
+E         + ALREADY_REGISTERED
+
+tests/test_blackbox.py:138: AssertionError
+_ test_decision_table_priority[DT-05-full-course-student_args4-course_args4-WAITLISTED] _
+
+test_id = 'DT-05-full-course', student_args = {}
+course_args = {'prerequisites': set(), 'capacity': 1, 'enrolled': 1}
+expected = 'WAITLISTED'
+
+    @pytest.mark.parametrize(
+        "test_id,student_args,course_args,expected",
+        [
+            ("DT-01-dues-over-duplicate", {"outstanding_dues": 1, "registered_courses": {"CS201"}}, {"prerequisites": {"MISSING"}, "capacity": 1, "enrolled": 1}, "DUES_BLOCK"),
+            ("DT-02-duplicate-over-prerequisites", {"registered_courses": {"CS201"}}, {"prerequisites": {"MISSING"}, "capacity": 1, "enrolled": 1}, "ALREADY_REGISTERED"),
+            ("DT-03-prerequisite-over-credit", {"completed_courses": set(), "current_credits": 18}, {"prerequisites": {"MISSING"}, "capacity": 1, "enrolled": 1}, "PREREQUISITES_MISSING"),
+            ("DT-04-credit-over-availability", {"current_credits": 18}, {"prerequisites": set(), "capacity": 1, "enrolled": 1}, "CREDIT_LIMIT"),
+            ("DT-05-full-course", {}, {"prerequisites": set(), "capacity": 1, "enrolled": 1}, "WAITLISTED"),
+            ("DT-06-seat-available", {}, {"prerequisites": set(), "capacity": 1, "enrolled": 0}, "REGISTERED"),
+        ],
+    )
+    def test_decision_table_priority(test_id, student_args, course_args, expected):
+        student = make_student(**student_args)
+        course = make_course(**course_args)
+        before = (student.current_credits, set(student.registered_courses), course.enrolled, list(course.waitlist))
+>       assert registration_decision(student, course) == expected, test_id
+E       AssertionError: DT-05-full-course
+E       assert 'REGISTERED' == 'WAITLISTED'
+E         
+E         - WAITLISTED
+E         + REGISTERED
+
+tests/test_blackbox.py:138: AssertionError
+_______ test_register_course_waitlists_without_changing_enrollment_state _______
+
+    def test_register_course_waitlists_without_changing_enrollment_state():
+        student = make_student()
+        course = make_course(capacity=1, enrolled=1)
+>       assert register_course(student, course) == "WAITLISTED"
+E       AssertionError: assert 'REGISTERED' == 'WAITLISTED'
+E         
+E         - WAITLISTED
+E         + REGISTERED
+
+tests/test_blackbox.py:156: AssertionError
+____________ test_register_course_does_not_duplicate_waitlist_entry ____________
+
+    def test_register_course_does_not_duplicate_waitlist_entry():
+        student = make_student()
+        course = make_course(capacity=1, enrolled=1, waitlist=["S100"])
+>       assert register_course(student, course) == "WAITLISTED"
+E       AssertionError: assert 'REGISTERED' == 'WAITLISTED'
+E         
+E         - WAITLISTED
+E         + REGISTERED
+
+tests/test_blackbox.py:166: AssertionError
+_ test_unsuccessful_registration_leaves_state_unchanged[student_args0-course_args0-DUES_BLOCK] _
+
+student_args = {'outstanding_dues': 1}, course_args = {}
+expected = 'DUES_BLOCK'
+
+    @pytest.mark.parametrize(
+        "student_args,course_args,expected",
+        [
+            ({"outstanding_dues": 1}, {}, "DUES_BLOCK"),
+            ({"registered_courses": {"CS201"}}, {}, "ALREADY_REGISTERED"),
+            ({"completed_courses": set()}, {}, "PREREQUISITES_MISSING"),
+            ({"current_credits": 18}, {"prerequisites": set()}, "CREDIT_LIMIT"),
+        ],
+    )
+    def test_unsuccessful_registration_leaves_state_unchanged(student_args, course_args, expected):
+        student = make_student(**student_args)
+        course = make_course(**course_args)
+        before = (student.current_credits, set(student.registered_courses), course.enrolled, list(course.waitlist))
+>       assert register_course(student, course) == expected
+E       AssertionError: assert 'REGISTERED' == 'DUES_BLOCK'
+E         
+E         - DUES_BLOCK
+E         + REGISTERED
+
+tests/test_blackbox.py:183: AssertionError
+______ test_withdraw_course_removes_registration_and_updates_both_objects ______
+
+    def test_withdraw_course_removes_registration_and_updates_both_objects():
+        student = make_student(current_credits=9, registered_courses={"CS201"})
+        course = make_course(credit_hours=3, enrolled=7)
+        assert withdraw_course(student, course) is True
+        assert student.registered_courses == set()
+        assert student.current_credits == 6
+>       assert course.enrolled == 6
+E       AssertionError: assert 7 == 6
+E        +  where 7 = Course(code='CS201', credit_hours=3, capacity=30, enrolled=7, prerequisites={'MATH101', 'CS101'}, waitlist=[]).enrolled
+
+tests/test_blackbox.py:194: AssertionError
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.14.8-final-0 ________________
+
+Name              Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------------
+registration.py      53      3     26      3    92%   51, 59, 71
+-------------------------------------------------------------
+TOTAL                53      3     26      3    92%
+=========================== short test summary info ============================
+FAILED tests/test_blackbox.py::test_ecp_registration_classes[ECP-02-positive-dues-student_args1-course_args1-DUES_BLOCK]
+FAILED tests/test_blackbox.py::test_ecp_registration_classes[ECP-05-some-prerequisites-missing-student_args4-course_args4-PREREQUISITES_MISSING]
+FAILED tests/test_blackbox.py::test_ecp_registration_classes[ECP-08-course-full-student_args7-course_args7-WAITLISTED]
+FAILED tests/test_blackbox.py::test_ecp_credit_class_representatives[ECP-12-valid-max-course-credit-14-4-True]
+FAILED tests/test_blackbox.py::test_bva_credit_boundaries[BVA-04-total-exactly-18-15-3-True]
+FAILED tests/test_blackbox.py::test_bva_capacity_boundary[BVA-11-exact-capacity-2-WAITLISTED]
+FAILED tests/test_blackbox.py::test_decision_table_priority[DT-01-dues-over-duplicate-student_args0-course_args0-DUES_BLOCK]
+FAILED tests/test_blackbox.py::test_decision_table_priority[DT-05-full-course-student_args4-course_args4-WAITLISTED]
+FAILED tests/test_blackbox.py::test_register_course_waitlists_without_changing_enrollment_state
+FAILED tests/test_blackbox.py::test_register_course_does_not_duplicate_waitlist_entry
+FAILED tests/test_blackbox.py::test_unsuccessful_registration_leaves_state_unchanged[student_args0-course_args0-DUES_BLOCK]
+FAILED tests/test_blackbox.py::test_withdraw_course_removes_registration_and_updates_both_objects
+12 failed, 28 passed in 0.22s
+Pytest exit code: 1
